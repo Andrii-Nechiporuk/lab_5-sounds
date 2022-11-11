@@ -23,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     private Animator anim;
 
+    public AudioSource woodstepsSound, metalstepsSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,12 +82,26 @@ public class PlayerMovement : MonoBehaviour
     private void Idle()
     {
         anim.SetFloat("Speed", 0, 0.1f, Time.deltaTime);
+        woodstepsSound.enabled = false;
+        metalstepsSound.enabled = false;
     }
 
     private void Walk()
     {
         moveSpeed = walkSpeed;
         anim.SetFloat("Speed", 0.5f, 0.1f, Time.deltaTime);
+        if (controller.CompareTag("Wood"))
+        {
+            woodstepsSound.enabled = true;
+            metalstepsSound.enabled = false;
+        }
+        if (controller.CompareTag("Metal"))
+        {
+            woodstepsSound.enabled = false;
+            metalstepsSound.enabled = true;
+        }
+
+
     }
 
     private void Run()
