@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     private Animator anim;
 
     public AudioSource woodstepsSound, metalstepsSound;
-
+    private string taglayer = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -84,35 +84,48 @@ public class PlayerMovement : MonoBehaviour
         anim.SetFloat("Speed", 0, 0.1f, Time.deltaTime);
         woodstepsSound.enabled = false;
         metalstepsSound.enabled = false;
+
     }
 
     private void Walk()
     {
         moveSpeed = walkSpeed;
         anim.SetFloat("Speed", 0.5f, 0.1f, Time.deltaTime);
-        if (controller.CompareTag("Wood"))
+        if (taglayer == "Wood" && isGrounded == true)
         {
             woodstepsSound.enabled = true;
             metalstepsSound.enabled = false;
         }
-        if (controller.CompareTag("Metal"))
+        if (taglayer == "Metal" && isGrounded == true)
         {
             woodstepsSound.enabled = false;
             metalstepsSound.enabled = true;
         }
-
-
     }
 
     private void Run()
     {
         moveSpeed = runSpeed;
         anim.SetFloat("Speed", 1f, 0.1f, Time.deltaTime);
+        if (taglayer == "Wood" && isGrounded==true)
+        {
+            Debug.Log("fdsfsdfsdfasfsad");
+            woodstepsSound.enabled = true;
+            metalstepsSound.enabled = false;
+        }
+        if (taglayer == "Metal" && isGrounded == true)
+        {
+            woodstepsSound.enabled = false;
+            metalstepsSound.enabled = true;
+        }
     }
 
     private void Jump()
     {
         velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        woodstepsSound.enabled = false;
+        metalstepsSound.enabled = false;
+
     }
     private void Aim()
     {
@@ -130,5 +143,19 @@ public class PlayerMovement : MonoBehaviour
                 anim.SetBool("isAiming", false);
             }
         }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Wood"))
+        {
+            Debug.Log("wood");
+            taglayer = "Wood";
+        }
+        if (collision.gameObject.CompareTag("Metal"))
+        {
+            Debug.Log("metal");
+            taglayer = "Metal";
+        }
+
     }
 }
